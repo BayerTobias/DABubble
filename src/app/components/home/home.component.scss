@@ -22,8 +22,7 @@
 
   &:hover .showMenuIcon,
   &:hover span {
-    filter: brightness(0) saturate(100%) invert(29%) sepia(14%) saturate(2736%)
-      hue-rotate(164deg) brightness(104%) contrast(98%);
+    filter: brightness(0) saturate(100%) invert(29%) sepia(14%) saturate(2736%) hue-rotate(164deg) brightness(104%) contrast(98%);
   }
 }
 
@@ -55,9 +54,6 @@
   background: var(--White, #fff);
   flex-grow: 1;
   border-radius: 30px;
-  padding: 0 35px;
-  box-sizing: content-box;
-  overflow-y: auto;
 }
 
 app-pm-chat {

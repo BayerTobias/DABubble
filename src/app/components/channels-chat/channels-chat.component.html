@@ -1,117 +1,52 @@
 <div *ngIf="addPeople" class="addPeopleDialog">
-  <div class="addPeopleDialogContent">
-    <div class="inputContainer">
-      <span>Leute hinzufügen</span>
-      <span class="channelsName">#{{ fireService.currentChannel.name }}</span>
-      <input
-        placeholder="Name eingeben"
-        class="choosePeopleInput"
-        [(ngModel)]="usersName"
-        (ngModelChange)="showFilteredUsers()"
-      />
-      <div *ngIf="filteredUsers.length > 0" class="peopleToAdd">
-        <div
-          *ngFor="let filteredUser of filteredUsers"
-          class="filteredUser"
-          (click)="addToSelectedUsers(filteredUser)"
-        >
-          <img
-            class="profileImg"
-            src="assets/img/{{ filteredUser.profileImg }}"
-          />
-          <p>{{ filteredUser.name }}</p>
+    <div class="addPeopleDialogContent">
+        <div class="inputContainer">
+            <span>Leute hinzufügen</span>
+            <span class="channelsName">#{{ fireService.currentChannel.name }}</span>
+            <input placeholder="Name eingeben" class="choosePeopleInput" [(ngModel)]="usersName"
+                (ngModelChange)="showFilteredUsers()" />
+            <div *ngIf="filteredUsers.length > 0" class="peopleToAdd">
+                <div *ngFor="let filteredUser of filteredUsers" class="filteredUser"
+                    (click)="addToSelectedUsers(filteredUser)">
+                    <img class="profileImg" src="assets/img/{{ filteredUser.profileImg }}" />
+                    <p>{{ filteredUser.name }}</p>
+                </div>
+            </div>
+            <button (click)="addUsersToCurrentChannel()" [disabled]="isButtonDisabled"
+                [ngStyle]="{ 'background-color': buttonColor }" class="createButton">
+                Hinzufügen
+            </button>
         </div>
-      </div>
-      <button
-        (click)="addUsersToCurrentChannel()"
-        [disabled]="isButtonDisabled"
-        [ngStyle]="{ 'background-color': buttonColor }"
-        class="createButton"
-      >
-        Hinzufügen
-      </button>
     </div>
-  </div>
 </div>
 
 <div class="channelsContainer">
-  <header>
-    <div class="headerLeft">
-      <img class="tagImg" src="assets/img/tag.png" />
-      <span *ngIf="fireService.currentChannel">{{
-        fireService.currentChannel.name
-      }}</span>
-      <img class="arrowImg" src="assets/img/arrow_drop_down.png" />
-    </div>
-    <div *ngIf="fireService.currentChannel" class="headerRight">
-      <img
-        [ngStyle]="{ left: -28 - i * 10 + 'px' }"
-        class="usersImg"
-        *ngFor="let user of fireService.currentChannel.users; let i = index"
-        src="assets/img/{{ user.profileImg }}"
-      />
-
-      <p>{{ fireService.currentChannel.users.length }}</p>
-      <img
-        (click)="openAddPeople()"
-        class="addUserIcon"
-        src="assets/img/person_add.png"
-      />
-    </div>
-  </header>
-
-  <app-message
-    *ngFor="let message of fireService.sorted; let i = index"
-    [sender]="message.sender"
-    [profileImg]="message.profileImg"
-    [content]="message.content"
-    [creationDate]="message.creationDate"
-    [creationTime]="message.creationTime"
-    [currentMessage]="message"
-    [reactions]="message.reactions"
-    type="channel"
-    [index]="i"
-  ></app-message>
-
-  <!--   <div style="padding-bottom: 76px;" *ngIf="fireService.currentChannel">
-        <div *ngFor="let message of fireService.sorted let i=index" [ngClass]="{'odd-message': getSide(i)}">
-            <div *ngIf="fireService.isDifferentDate(message, i) || i===0">
-                <div class="dateDiv" *ngIf="fireService.dateNameChecker(message)==='heute'">
-                </div>
-                <div class="dateContent">
-                    {{ fireService.dateNameChecker(message)}}
-                </div>
-            </div>
-            <div class="messagesSection">
-                <app-reactions [index]="i" [currentMessage]="message"></app-reactions>
-                <div class="messagesInfo" [ngClass]="{'odd-message': !getSide(i)}">
-                    <img class="messageUsersImg" src="assets/img/{{message.profileImg}}">
-                    <div class="nameContentDiv">
-                        <div>
-                            <span class="nameOfSender">{{message.sender}}</span>
-                            <span class="time">{{ message.creationTime}} Uhr</span>
-                        </div>
-                        <span class="messageContent">{{message.content}}</span>
-                        <div class="reactions" *ngIf="message.reactions.length>0 ">
-                            <div class="reaction" *ngFor="let emoji of message.reactions">
-                                <div>{{ emoji.native}}</div>
-                                <div *ngIf="emoji.counter">{{
-                                    emoji.counter}}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <header>
+        <div class="headerLeft">
+            <img class="tagImg" src="assets/img/tag.png" />
+            <span *ngIf="fireService.currentChannel">{{
+                fireService.currentChannel.name
+                }}</span>
+            <img class="arrowImg" src="assets/img/arrow_drop_down.png" />
         </div>
-    </div>
- -->
+        <div *ngIf="fireService.currentChannel" class="headerRight">
+            <img [ngStyle]="{ left: -28 - i * 10 + 'px' }" class="usersImg"
+                *ngFor="let user of fireService.currentChannel.users; let i = index"
+                src="assets/img/{{ user.profileImg }}" />
 
-  <footer>
-    <input placeholder="Type your message" [(ngModel)]="content" />
-    <img
-      (click)="addMessageToChannel()"
-      class="sendIcon"
-      src="assets/img/send_icon.png"
-    />
-  </footer>
+            <p>{{ fireService.currentChannel.users.length }}</p>
+            <img (click)="openAddPeople()" class="addUserIcon" src="assets/img/person_add.png" />
+        </div>
+    </header>
+    <div class="messagesOnChannel">
+        <app-message *ngFor="let message of fireService.sorted; let i = index" [sender]="message.sender"
+            [profileImg]="message.profileImg" [content]="message.content" [creationDate]="message.creationDate"
+            [creationTime]="message.creationTime" [currentMessage]="message" [reactions]="message.reactions"
+            type="channel" [index]="i"></app-message>
+    </div>
+
+    <footer>
+        <input placeholder="Type your message" [(ngModel)]="content" />
+        <img (click)="addMessageToChannel()" class="sendIcon" src="assets/img/send_icon.png" />
+    </footer>
 </div>

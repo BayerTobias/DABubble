@@ -2,7 +2,9 @@
     margin-left: 40px;
     padding-top: 20px;
     padding-bottom: 20px;
-
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 header {
@@ -67,8 +69,6 @@ footer {
     border: 1px solid blue;
     border-radius: 15px;
     padding: 20px;
-    position: fixed;
-    bottom: 27px;
     background-color: white;
     margin-right: 40px;
 
@@ -87,33 +87,7 @@ footer {
     right: 20px;
 }
 
-/* .messagesSection {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    margin-bottom: 60px;
-    position: relative;
 
-}
-
-.nameContentDiv {
-    display: flex;
-    flex-direction: column;
-    margin-left: 20px;
-    margin-right: 20px;
-
-    .nameOfSender {
-        font-weight: bold;
-    }
-
-    .messageContent {
-        margin-left: 10px;
-        background-color: #ECEEFE;
-        padding: 5px 10px;
-        margin-top: 10px;
-        border-radius: 0px 40px 40px 40px;
-    }
-} */
 
 .choosePeopleInput {
     border-radius: 40px;
@@ -224,6 +198,10 @@ footer {
     width: fit-content;
     cursor: pointer;
     align-self: flex-end;
+}
+
+.messagesOnChannel {
+    overflow-y: auto;
 }
 
 /* .messagesInfo {
