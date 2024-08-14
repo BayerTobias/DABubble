@@ -50,6 +50,7 @@ export class SideMenuComponent implements OnInit {
     await this.fireService.getCurrentChannel('channels', id);
     this.fireService.getCurrentDate();
     this.navService.setChatPath('chanel');
+    this.navService.triggerFocus();
   }
 
   /**
@@ -77,5 +78,6 @@ export class SideMenuComponent implements OnInit {
     this.navService.pmRecipient = userId;
     this.navService.setChatPath('pm');
     this.fireService.subscribeToPmRecipient(userId);
+    this.navService.triggerFocus();
   }
 }

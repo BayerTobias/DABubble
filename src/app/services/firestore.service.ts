@@ -38,7 +38,7 @@ export class FirestoreService {
   public unsubUsers: Function;
   userOnChannelCheck = [];
   private defaultChannelCalled: boolean = false;
-  public conversationId
+  public conversationId;
 
   constructor(private firestore: Firestore) {
     this.subscribeToCollection('pms', this.pmsCollectionDataSubject);
@@ -253,7 +253,6 @@ export class FirestoreService {
    * Initializes a Firestore query and registers an onSnapshot listener for channel updates.
    */
   async readChannels() {
-
     this.defaultChannelCalled = false;
     const colRef = this.getColRef('channels');
 
@@ -345,7 +344,9 @@ export class FirestoreService {
             if (channel.name === 'Backend') {
               if (index !== undefined) {
                 this.userOnChannelCheck.push(true);
-              } else { this.userOnChannelCheck.push(false); }
+              } else {
+                this.userOnChannelCheck.push(false);
+              }
             } else {
               this.userOnChannelCheck.push(true);
             }

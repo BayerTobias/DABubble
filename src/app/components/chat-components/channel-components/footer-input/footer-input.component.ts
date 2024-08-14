@@ -13,6 +13,8 @@ import {
   deleteObject,
 } from 'firebase/storage';
 import { Conversation } from 'src/app/classes/conversation.class';
+import { HomeNavigationService } from 'src/app/services/home-navigation.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-footer-input',
@@ -38,14 +40,50 @@ export class FooterInputComponent {
   constructor(
     public fireService: FirestoreService,
     public userService: UserService,
-    private cursorService: CursorPositionService
-  ) { }
+    private cursorService: CursorPositionService,
+    private navigationService: HomeNavigationService
+  ) {}
   fileName = '';
   @ViewChild('contentContainer') contentContainer: ElementRef;
   @ViewChild('inputFooter', { static: true }) inputFooter: ElementRef;
   private storageRef;
   public linkContent: string;
 
+  private focusSubscription: Subscription;
+
+  ngOnInit() {
+    this.focusInput();
+    this.focusSubscription = this.navigationService.mainChatFocus.subscribe(
+      (focus: boolean) => {
+        if (focus) {
+          this.focusInput();
+          this.navigationService.resetFocus();
+        }
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    this.focusSubscription.unsubscribe();
+  }
+
+  /**
+   * Sets focus to the input field referenced by `inputFooter` if it exists.
+   * This is typically used to ensure the input field is ready for user interaction.
+   */
+  focusInput() {
+    if (this.inputFooter) {
+      this.inputFooter.nativeElement.focus();
+    }
+  }
+
+  /**
+   * Handles the selection of a file from the input element.
+   * Uploads the selected file to Firebase Storage and initiates the process to generate a download URL.
+   *
+   * @param event - The event triggered by file selection.
+   * @param input - The input element where the file was selected.
+   */
   async onFileSelected(event, input) {
     const metadata = {
       contentType: 'image/jpeg',
@@ -61,6 +99,13 @@ export class FooterInputComponent {
     this.readImage(uploadTask, input);
   }
 
+  /**
+   * Reads the uploaded image's data and retrieves the download URL.
+   * Sets `linkContent` with a hyperlink to the uploaded file.
+   *
+   * @param uploadTask - The upload task returned by Firebase Storage during the file upload.
+   * @param input - The input element related to the file upload.
+   */
   readImage(uploadTask, input) {
     uploadTask.then((snapshot) => {
       getDownloadURL(snapshot.ref).then((downloadURL) => {
@@ -100,6 +145,12 @@ export class FooterInputComponent {
     this.toggleEmoji();
   }
 
+  /**
+   * Generates a unique message ID based on the current context (channel, PM, or thread).
+   * The ID is derived by incrementing the ID of the last message in the respective collection.
+   *
+   * @returns The generated message ID.
+   */
   addMessageId() {
     let id: number;
     if (
@@ -158,8 +209,12 @@ export class FooterInputComponent {
     this.sendMessageForm.patchValue(updatedMessage);
   }
 
+  /**
+   * Creates a new message object based on the current user input and context (channel, PM, or thread).
+   * Populates the message with metadata, including sender details, content, creation time, and a unique ID.
+   * Depending on the message type, the message is added to a channel, PM conversation, or thread.
+   */
   createMessage() {
-
     this.newMessage = new Message();
     this.newMessage.sender = this.userService.user.name;
     this.newMessage.profileImg = this.userService.user.profileImg;
@@ -168,7 +223,7 @@ export class FooterInputComponent {
     } else {
       this.newMessage.content = this.sendMessageForm.value;
     }
-    if (this.newMessage.content !== "") {
+    if (this.newMessage.content !== '') {
       this.newMessage.thread = [];
       this.newMessage.reactions = [];
       this.newMessage.creationDate = this.fireService.getCurrentDate();

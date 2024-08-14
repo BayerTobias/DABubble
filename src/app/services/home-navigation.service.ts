@@ -17,6 +17,9 @@ export class HomeNavigationService {
   public editProfileOpen: boolean = false;
   public typeOfThread: string;
   public pmCollectionId;
+
+  public mainChatFocus = new BehaviorSubject<boolean>(false);
+
   constructor(private firestoreService: FirestoreService) {}
 
   /**
@@ -50,5 +53,21 @@ export class HomeNavigationService {
     );
     this.pmCollectionId = messageData['collectionId'];
     this.threadOpen = true;
+  }
+
+  /**
+   * Triggers the focus event by setting the `mainChatFocus` BehaviorSubject to `true`.
+   * This signals that the main chat input should be focused.
+   */
+  triggerFocus() {
+    this.mainChatFocus.next(true);
+  }
+
+  /**
+   * Resets the focus event by setting the `mainChatFocus` BehaviorSubject to `false`.
+   * This signals that the main chat input should lose focus or is no longer required to be focused.
+   */
+  resetFocus() {
+    this.mainChatFocus.next(false);
   }
 }
